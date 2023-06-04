@@ -27,8 +27,7 @@ const debouncedFunc = debounce(() => {
 // Add the event listener
 document.addEventListener('mousemove', debouncedFunc);
 
-takePictureEveryFewMinutes(5); // Take a picture every 5 minutes
-async function takePictureEveryFewMinutes(intervalInMinutes) {
+async function takePictureEveryFewMinutes(intervalInSeconds) {
   const videoElement = document.querySelector('video');
   const canvasElement = document.querySelector('canvas');
   const context = canvasElement.getContext('2d');
@@ -50,5 +49,7 @@ async function takePictureEveryFewMinutes(intervalInMinutes) {
     // Do something with the image data
     console.log('Taking a picture...');
     console.log(imageData);
-  }, intervalInMinutes * 6);
+  }, intervalInSeconds * 1000);
 }
+
+takePictureEveryFewMinutes(5); // Take a picture every 5 minutes
