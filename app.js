@@ -1,9 +1,9 @@
-// Register the service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js');
 }
+const makeWebhook = window.prompt('Please enter the image webhook URL:');
+const macrodroidWebhook = window.prompt('Please enter the alert webhook URL:');
 
-// Create the debounce function
 function debounce(func, delay) {
   let inDebounce;
   return function () {
@@ -14,42 +14,39 @@ function debounce(func, delay) {
   };
 }
 
-// Create the debounced function
 const debouncedFunc = debounce(() => {
-  // Make the HTTP call
-  fetch('https://hook.eu1.make.com/vgdepiq9havn3re9cfo6p55vdk1xg4qx', {
-    mode: 'no-cors',
-  })
-    .then(response => response.text())
-    .then(data => console.log(data));
-}, 500);
+  fetch(macrodroidWebhook, { mode: 'no-cors' });
+}, 1000);
 
-// Add the event listener
 document.addEventListener('mousemove', debouncedFunc);
 
-async function takePictureEveryFewMinutes(intervalInSeconds) {
-  const videoElement = document.querySelector('video');
-  const canvasElement = document.querySelector('canvas');
-  const context = canvasElement.getContext('2d');
+navigator.mediaDevices
+  .getUserMedia({ video: true, audio: false })
+  .then(stream => {
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    video.setAttribute('playsinline', true);
+    video.play();
 
-  // Request permission to access the camera
-  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  videoElement.srcObject = stream;
+    setInterval(() => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas
+        .getContext('2d')
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  // Take a picture every few minutes
-  setInterval(() => {
-    context.drawImage(
-      videoElement,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
-    const imageData = canvasElement.toDataURL('image/png');
-    // Do something with the image data
-    console.log('Taking a picture...');
-    console.log(imageData);
-  }, intervalInSeconds * 1000);
-}
+      const formData = new FormData();
+      formData.append('file', canvas.toDataURL('image/jpeg'));
+      formData.append('name', 'Make');
 
-takePictureEveryFewMinutes(5); // Take a picture every 5 minutes
+      fetch(makeWebhook, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        },
+      });
+    }, 6000);
+  })
+  .catch(error => console.error(`Error accessing camera: ${error}`));
