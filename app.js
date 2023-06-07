@@ -1,8 +1,18 @@
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then(registration => {
+        console.log('Service worker registered:', registration);
+      })
+      .catch(error => {
+        console.error('Service worker registration failed:', error);
+      });
+  });
 }
-const makeWebhook = window.prompt('Please enter the image webhook URL:');
+
 const macrodroidWebhook = window.prompt('Please enter the alert webhook URL:');
+const makeWebhook = window.prompt('Please enter the image webhook URL:');
 
 function debounce(func, delay) {
   let inDebounce;
@@ -16,7 +26,7 @@ function debounce(func, delay) {
 
 const debouncedFunc = debounce(() => {
   fetch(macrodroidWebhook, { mode: 'no-cors' });
-}, 1000);
+}, 3000);
 
 document.addEventListener('mousemove', debouncedFunc);
 
@@ -36,17 +46,29 @@ navigator.mediaDevices
         .getContext('2d')
         .drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      const formData = new FormData();
-      formData.append('file', canvas.toDataURL('image/jpeg'));
-      formData.append('name', 'Make');
+      // Convert the canvas to a Blob object
+      canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('file', blob, 'thiefPhoto.png');
 
-      fetch(makeWebhook, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-        },
-      });
-    }, 6000);
+        // Create an anchor tag to download the image
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'thiefPhoto.png';
+
+        fetch(makeWebhook, {
+          method: 'POST',
+          body: formData,
+        })
+          .then(response => {
+            console.log('Success:', response);
+            // Trigger the download of the image after the response is received
+            downloadLink.click();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }, 'image/png');
+    }, 60000);
   })
   .catch(error => console.error(`Error accessing camera: ${error}`));
