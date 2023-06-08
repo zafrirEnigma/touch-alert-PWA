@@ -1,5 +1,5 @@
-.main_container{
-    color: white;
-    background-color: black;
-
+body {
+  color: white;
+  background-color: black;
+  font: 4em sans-serif;
 }
