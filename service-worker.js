@@ -2,7 +2,7 @@
 const cacheName = 'v1';
 
 // Default files to always cache
-const cacheFiles = ['/', '/index.html', '/app.js', '/icon-512.png'];
+const cacheFiles = ['/index.html', '/app.js', '/images/manifest-icon-512.maskable.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
