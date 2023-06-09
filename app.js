@@ -1,7 +1,7 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/service-worker.js', { scope: '/' })
+      .register('/service-worker.js', { scope: '/touch-alert-PWA/' })
       .then(registration => {
         console.log('Service worker registered:', registration);
       })
