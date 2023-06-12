@@ -1,7 +1,7 @@
-if ('serviceWorker' in navigator) {
+/* if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/service-worker.js', { scope: '/touch-alert-PWA/' })
+      .register('/service-worker.js')
       .then(registration => {
         console.log('Service worker registered:', registration);
       })
@@ -10,7 +10,7 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
-
+ */
 const macrodroidWebhook = window.prompt('Please enter the alert webhook URL:');
 const makeWebhook = window.prompt('Please enter the image webhook URL:');
 

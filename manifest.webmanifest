@@ -2,7 +2,7 @@
   "name": "Mousemove PWA",
   "short_name": "Mousemove",
   "lang": "he-IL",
-  "start_url": "/index.html",
+  "start_url": "/touch-alert-PWA/",
   "background_color": "black",
   "theme_color": "black",
   "icons": [
