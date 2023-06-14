@@ -3,8 +3,8 @@
   "short_name": "Mousemove",
   "lang": "he-IL",
   "start_url": "/touch-alert-PWA/",
-  "background_color": "black",
-  "theme_color": "black",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/images/manifest-icon-192.maskable.png",
