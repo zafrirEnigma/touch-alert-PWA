@@ -24,8 +24,8 @@ function debounce(func, delay) {
   };
 }
 
-const debouncedFunc = debounce(() => {
-  fetch(macrodroidWebhook, { mode: 'no-cors' });
+const debouncedFunc = debounce(async () => {
+  await fetch(macrodroidWebhook, { mode: 'no-cors' });
 }, 3000);
 
 document.addEventListener('mousemove', debouncedFunc);
@@ -69,6 +69,6 @@ navigator.mediaDevices
             console.error('Error:', error);
           });
       }, 'image/png');
-    }, 60000);
+    }, 300000);
   })
   .catch(error => console.error(`Error accessing camera: ${error}`));
